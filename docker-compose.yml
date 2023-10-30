@@ -5,15 +5,15 @@ services:
     image: postgres
     container_name: db_postgres
     environment:
-      POSTGRES_DB: etl  # Замените на имя вашей базы данных
+      POSTGRES_DB: etl
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: usubop
     ports:
-      - "5432:5432"  # Маппинг порта PostgreSQL
+      - "5432:5432"
   web:
-    image: test_task_med:v1  # Замените на имя вашего образа Python-приложения
+    image: test_task_med:v1
     ports:
-      - "8000:8000"  # Замените порт на вашем приложении, если это необходимо
+      - "8000:8000"
     depends_on:
       - db
     environment:
