@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    container_name: db_postgres
+    environment:
+      POSTGRES_DB: etl  # Замените на имя вашей базы данных
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: usubop
+    ports:
+      - "5432:5432"  # Маппинг порта PostgreSQL
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:latest
+    environment:
+      PGADMIN_DEFAULT_EMAIL: artem555525fssg@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: 92usubop
+    depends_on:
+      - db
+    ports:
+       - "5050:80"
+  web:
+    image: test_task_med:v1  # Замените на имя вашего образа Python-приложения
+    ports:
+      - "8000:8000"  # Замените порт на вашем приложении, если это необходимо
+    depends_on:
+      - db
+      - pgadmin
+    environment:
+      - POSTGRES_DB=etl
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=usubop
+      - DATABASE_HOST=db
+      - BOT_TOKEN=6501903351:AAGBuLSZX_kRUR782BXJqyZWrdYEphboHsw

@@ -3,14 +3,16 @@ from etl import xlsx_to_database
 from create_table import get_engine, ETL
 from sqlalchemy import select, func
 import pandas as pd
+import os
 
 
-BOT_TOKEN = "6501903351:AAGBuLSZX_kRUR782BXJqyZWrdYEphboHsw"
+BOT_TOKEN = os.environ.get('BOT_TOKEN')
 
+#BOT_TOKEN = "6501903351:AAGBuLSZX_kRUR782BXJqyZWrdYEphboHsw"
+database_parameter = ["postgres", "usubop", "db", "5432", "etl"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
-database_parameter = ["postgres", "usubop", "localhost", "5432", "etl"]
 
 
 @bot.message_handler(commands=['report'])
