@@ -4,22 +4,25 @@ from create_table import get_engine, ETL
 from sqlalchemy import select, func
 import pandas as pd
 import os
+import time
 
 
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
+POSTGRES_USER = os.environ.get('POSTGRES_USER')
+POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
+DATABASE_HOST = os.environ.get('DATABASE_HOST')
+POSTGRES_DB = os.environ.get('POSTGRES_DB')
 
-#BOT_TOKEN = "6501903351:AAGBuLSZX_kRUR782BXJqyZWrdYEphboHsw"
-database_parameter = ["postgres", "usubop", "db", "5432", "etl"]
 
 bot = telebot.TeleBot(BOT_TOKEN)
-
 
 
 @bot.message_handler(commands=['report'])
 def send_document(message):
     print(f"{message.from_user.username} попросил файл")
 
-    with get_engine(*database_parameter).connect() as conn:
+    with get_engine(user=POSTGRES_USER, password=POSTGRES_PASSWORD, host=DATABASE_HOST,
+                    port=5432, db=POSTGRES_DB).connect() as conn:
         count_dose_sum = func.sum(ETL.c["COUNT_DOSE"]).label("КОЛИЧЕСТВО ДОЗ")
         days_overdue_avg = func.round(func.avg(ETL.c["DAYS_OVERDUE"])).label("ПРОСРОЧЕНО ДНЕЙ")
         subject_of_the_federation = ETL.c["SUBJECT_OF_THE_RUSSIAN_FEDERATION"].label("СУБЪЕКТ РФ")
@@ -37,7 +40,8 @@ def send_document(message):
 
 
 if __name__ == "__main__":
-    xlsx_to_database(*database_parameter)
+    time.sleep(10)
+    xlsx_to_database(user=POSTGRES_USER, password=POSTGRES_PASSWORD, host=DATABASE_HOST, port=5432, db=POSTGRES_DB)
     try:
         bot.polling()
     finally:
