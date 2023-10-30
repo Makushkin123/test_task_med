@@ -6,17 +6,18 @@ import pandas as pd
 import os
 import time
 
-
 BOT_TOKEN = os.environ.get('BOT_TOKEN')
 POSTGRES_USER = os.environ.get('POSTGRES_USER')
 POSTGRES_PASSWORD = os.environ.get('POSTGRES_PASSWORD')
 DATABASE_HOST = os.environ.get('DATABASE_HOST')
 POSTGRES_DB = os.environ.get('POSTGRES_DB')
 
-
 bot = telebot.TeleBot(BOT_TOKEN)
 
 
+# handler для обработки команды /report
+# 1) выполняется sql запрос и записывается в output.xlsx
+# 2) отправляется файл output.xlsx обратно на сервес telegram выбранному пользователю
 @bot.message_handler(commands=['report'])
 def send_document(message):
     print(f"{message.from_user.username} попросил файл")
@@ -46,6 +47,3 @@ if __name__ == "__main__":
         bot.polling()
     finally:
         bot.stop_polling()
-
-
-
